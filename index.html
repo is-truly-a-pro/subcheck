@@ -36,50 +36,29 @@ SOFTWARE.
     }
 
     :root {
-      --primary: #6366f1;
-      --secondary: #818cf8;
-      --success: #10b981;
-      --error: #ef4444;
-      --warning: #f59e0b;
+      --violet: #6366f1;
     }
 
     body {
-      font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
       background: #000;
       color: #fff;
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .background {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.15), transparent 50%),
-                  radial-gradient(circle at bottom left, rgba(239, 68, 68, 0.15), transparent 50%);
-      z-index: 0;
     }
 
     .container {
-      position: relative;
       width: 90%;
       max-width: 700px;
-      z-index: 1;
     }
 
     .card {
-      background: rgba(17, 17, 17, 0.7);
+      background: #000;
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 24px;
       padding: 3rem;
-      backdrop-filter: blur(20px);
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
     }
 
     .header {
@@ -91,14 +70,11 @@ SOFTWARE.
       font-size: 2.5rem;
       font-weight: 700;
       margin-bottom: 1rem;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      letter-spacing: -0.02em;
+      color: #fff;
     }
 
     .subtitle {
-      color: rgba(255, 255, 255, 0.6);
+      color: #fff;
       font-size: 1.1rem;
     }
 
@@ -112,30 +88,22 @@ SOFTWARE.
       left: 1.5rem;
       top: 50%;
       transform: translateY(-50%);
-      color: rgba(255, 255, 255, 0.3);
-      font-size: 1.2rem;
-      transition: color 0.3s ease;
+      color: #fff;
     }
 
     .domain-input {
       width: 100%;
       padding: 1.5rem 1.5rem 1.5rem 4rem;
-      background: rgba(255, 255, 255, 0.05);
-      border: 2px solid rgba(255, 255, 255, 0.1);
+      background: #000;
+      border: 2px solid var(--violet);
       border-radius: 16px;
       font-size: 1.2rem;
       color: #fff;
-      transition: all 0.3s ease;
+      padding-right: 11rem;
     }
 
     .domain-input:focus {
       outline: none;
-      border-color: var(--primary);
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .domain-input:focus + .input-icon {
-      color: var(--primary);
     }
 
     .domain-suffix {
@@ -143,9 +111,10 @@ SOFTWARE.
       right: 1.5rem;
       top: 50%;
       transform: translateY(-50%);
-      color: rgba(255, 255, 255, 0.4);
       font-size: 1.2rem;
-      font-weight: 500;
+      white-space: nowrap;
+      pointer-events: none;
+      color: #fff;
     }
 
     .result {
@@ -153,49 +122,21 @@ SOFTWARE.
       border-radius: 16px;
       text-align: center;
       font-size: 1.2rem;
-      font-weight: 500;
+      color: #fff;
       opacity: 0;
-      transform: translateY(10px);
-      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      /* New rules for long text */
+      white-space: normal;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
 
     .result.show {
       opacity: 1;
-      transform: translateY(0);
-    }
-
-    .result.loading {
-      background: rgba(245, 158, 11, 0.1);
-      color: var(--warning);
-    }
-
-    .result.available {
-      background: rgba(16, 185, 129, 0.1);
-      color: var(--success);
-      animation: gradientPulse 2s infinite;
-    }
-
-    .result.taken {
-      background: rgba(239, 68, 68, 0.1);
-      color: var(--error);
     }
 
     .status-icon {
       display: inline-block;
       margin-right: 0.5rem;
-      font-size: 1.4rem;
-    }
-
-    @keyframes gradientPulse {
-      0% {
-        background: rgba(16, 185, 129, 0.1);
-      }
-      50% {
-        background: rgba(16, 185, 129, 0.2);
-      }
-      100% {
-        background: rgba(16, 185, 129, 0.1);
-      }
     }
 
     @media (max-width: 640px) {
@@ -203,28 +144,15 @@ SOFTWARE.
         padding: 2rem;
       }
 
-      h1 {
-        font-size: 2rem;
-      }
-
-      .subtitle {
-        font-size: 1rem;
-      }
-
       .domain-input {
         font-size: 1rem;
         padding: 1.2rem 1.2rem 1.2rem 3.5rem;
-      }
-
-      .input-icon,
-      .domain-suffix {
-        font-size: 1rem;
+        padding-right: 11rem;
       }
     }
   </style>
 </head>
 <body>
-  <div class="background"></div>
   <div class="container">
     <div class="card">
       <div class="header">
@@ -236,7 +164,7 @@ SOFTWARE.
                id="domain" 
                placeholder="name"
                oninput="validateInput(event); checkDomain();">
-        <i class="fas fa-search input-icon"></i>
+        <span class="input-icon">⌘</span>
         <span class="domain-suffix">.is-truly-a.pro</span>
       </div>
       <div class="result" id="result"></div>
@@ -259,7 +187,7 @@ SOFTWARE.
       const url = `https://raw.githubusercontent.com/is-truly-a-pro/register/main/domains/${formattedDomain}.json`;
 
       resultElement.innerHTML = '<i class="fas fa-spinner fa-spin status-icon"></i>Checking availability...';
-      resultElement.className = 'result show loading';
+      resultElement.className = 'result show';
       
       try {
         const response = await fetch(url);
@@ -267,17 +195,17 @@ SOFTWARE.
         if (response.status === 404) {
           resultElement.innerHTML = '<i class="fas fa-check-circle status-icon"></i>' + 
             `${formattedDomain}.is-truly-a.pro is available!`;
-          resultElement.className = 'result show available';
+          resultElement.className = 'result show';
         } else {
           resultElement.innerHTML = '<i class="fas fa-times-circle status-icon"></i>' + 
             `${formattedDomain}.is-truly-a.pro is already taken`;
-          resultElement.className = 'result show taken';
+          resultElement.className = 'result show';
         }
       } catch (error) {
         console.error('Error checking domain:', error);
         resultElement.innerHTML = '<i class="fas fa-exclamation-triangle status-icon"></i>' + 
           'Error checking domain availability';
-        resultElement.className = 'result show loading';
+        resultElement.className = 'result show';
       }
     }
 
